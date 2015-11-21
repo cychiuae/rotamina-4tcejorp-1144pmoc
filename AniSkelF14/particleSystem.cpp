@@ -3,8 +3,6 @@
 #include "particleSystem.h"
 
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 #include <limits.h>
@@ -14,9 +12,8 @@
  * Constructors
  ***************/
 
-ParticleSystem::ParticleSystem() 
+ParticleSystem::ParticleSystem() : bake_fps(0.0f), bake_start_time(0.0f), bake_end_time(0.0f), m_t0(0.0f), simulate(false), dirty(false)
 {
-	// TODO
 
 }
 
@@ -51,6 +48,10 @@ void ParticleSystem::startSimulation(float t)
 	// indicator window above the time slider
 	// to correctly show the "baked" region
 	// in grey.
+
+	bake_start_time = 0.0f;
+	m_t0 = 0.0f;
+
 	bake_end_time = -1;
 	simulate = true;
 	dirty = true;
@@ -66,7 +67,6 @@ void ParticleSystem::stopSimulation(float t)
 	// These values are used by the UI
 	simulate = false;
 	dirty = true;
-
 }
 
 /** Reset the simulation */
@@ -76,16 +76,37 @@ void ParticleSystem::resetSimulation(float t)
 	// TODO
 
 	// These values are used by the UI
+	bake_start_time = 0.0f;
+	m_t0 = 0.0f;
 	simulate = false;
 	dirty = true;
+	clearBaked();
 
 }
 
 /** Compute forces and update particles **/
 void ParticleSystem::computeForcesAndUpdateParticles(float t)
 {
+	if(simulate){
 
-	// TODO
+		const float delta_t = t - m_t0;
+		for (auto &p : m_particles) {
+
+			Vec3f force, velocity, position;
+			for(auto &f : m_forces)
+				force += f->getState(p);
+
+			velocity += force / p->getMass() * delta_t;
+			position += velocity * delta_t;
+
+			p->setForce(force);
+			p->setVelocity(velocity);
+			p->setPosition(position);
+
+		}
+		m_t0 = t;
+		bakeParticles(t);
+	}
 }
 
 
@@ -93,7 +114,10 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 void ParticleSystem::drawParticles(float t)
 {
 
-	// TODO
+	for (auto &bp : m_baked_particles[(int)(t*100)]) {
+		bp->Draw();
+	}
+	
 }
 
 
@@ -105,16 +129,25 @@ void ParticleSystem::drawParticles(float t)
 void ParticleSystem::bakeParticles(float t) 
 {
 
-	// TODO
+	m_baked_particles[(int)(t*100)].clear();
+	for (auto &p : m_particles) {
+		m_baked_particles[(int)(t * 100)].push_back(p->DeepCopy());
+	}
 }
 
 /** Clears out your data structure of baked particles */
 void ParticleSystem::clearBaked()
 {
-
-	// TODO
+	m_baked_particles.clear();
 }
 
+
+void ParticleSystem::addParticle(Particle* p){
+	m_particles.push_back(p);
+}
+void ParticleSystem::addForce(Force* f){
+	m_forces.push_back(f);
+}
 
 
 

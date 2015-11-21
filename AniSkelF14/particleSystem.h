@@ -15,9 +15,13 @@
 
 #ifndef __PARTICLE_SYSTEM_H__
 #define __PARTICLE_SYSTEM_H__
-
+#include <vector>
 #include "vec.h"
-
+#include <map>
+#include "Force.h"
+#include "particle.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
 class ParticleSystem {
@@ -71,7 +75,8 @@ public:
 	bool isSimulate() { return simulate; }
 	bool isDirty() { return dirty; }
 	void setDirty(bool d) { dirty = d; }
-
+	void addParticle(Particle* p);
+	void addForce(Force* f);
 
 
 protected:
@@ -84,10 +89,15 @@ protected:
 										// These 2 variables are used by the UI for
 										// updating the grey indicator 
 	float bake_end_time;				// time at which baking ended
+	float m_t0;
 
 	/** General state variables **/
 	bool simulate;						// flag for simulation mode
 	bool dirty;							// flag for updating ui (don't worry about this)
+
+	std::vector<Particle*> m_particles;
+	std::map<int, std::vector<Particle*>> m_baked_particles;
+	std::vector<Force*> m_forces;
 
 };
 

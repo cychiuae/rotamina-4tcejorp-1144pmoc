@@ -9,6 +9,7 @@
 #include "modelerdraw.h"
 #include "particleSystem.h"
 #include "LSystem.h"
+#include "PointParticle.h"
 
 
 #include <FL/gl.h>
@@ -693,6 +694,19 @@ int main()
 	// You should create a ParticleSystem object ps here and then
 	// call ModelerApplication::Instance()->SetParticleSystem(ps)
 	// to hook it up to the animator interface.
+
+	// ParticleSystem *ps = new ParticleSystem();
+
+	// Force* gravity = new Gravity(9.81);
+	// ModelerApplication::Instance()->SetParticleSystem(ps);
+	// for (int i = 0; i < 100; i++)
+	// {
+	// 	float mass = 1.0f;
+	// 	Particle *p = new PointParticle(mass, Vec3f(0, 0, 0), Vec3f(0, 0, 0), Vec3f(0, 0, 0));
+	// 	ps->addParticle(p);
+	// 	ps->addForce(gravity);
+
+	// }
 
     ModelerApplication::Instance()->Init(&createRobotArm, controls, NUMCONTROLS);
 
