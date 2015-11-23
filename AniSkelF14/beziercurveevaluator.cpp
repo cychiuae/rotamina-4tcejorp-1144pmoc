@@ -4,6 +4,9 @@ void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& control_point
 										 std::vector<Point>& evaluated_curve_points, 
 										 const float& animation_length, 
 										 const bool& wrap_control_points) const {
+	// Connect the point if no more than 4 control points
+	evaluated_curve_points.clear();
+
 	if (control_points.size() < 4) {
 		for (int i = 0; i < control_points.size(); i++) {
 			evaluated_curve_points.push_back(control_points[i]);
@@ -21,7 +24,7 @@ void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& control_point
 			y = control_points[0].y;;
 		}
 
-		evaluated_curve_points.push_back(Point(x, y));
+		evaluated_curve_points.insert(evaluated_curve_points.begin(), Point(x, y));
 
 		x = animation_length;
 		if (!wrap_control_points) {
@@ -34,7 +37,7 @@ void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& control_point
 					   3, -6, 3, 0,
 				      -3, 3, 0, 0,
 					   1, 0, 0, 0);
-		evaluated_curve_points.clear();
+	
 		std::vector<Point> controlPoints;
 		for (int i = 0; i < control_points.size();i++) {
 			controlPoints.push_back(control_points[i]);
@@ -45,12 +48,12 @@ void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& control_point
 				controlPoints.push_back(Point(control_points[0].x + animation_length, control_points[0].y));
 				controlPoints.insert(controlPoints.begin(), Point(control_points[control_points.size() - 1].x - animation_length, control_points[control_points.size() - 1].y));
 			}
-		} else {
+		} /*else {
 			for (int i = 0; i < 3; i++) {
-				controlPoints.insert(controlPoints.begin(), Point(0, control_points[0].y));
-				controlPoints.push_back(Point(animation_length, control_points[control_points.size() - 1].y));
+				controlPoints.insert(controlPoints.begin(), Point(control_points[0].x - animation_length, control_points[0].y));
+				controlPoints.push_back(Point(control_points[control_points.size() - 1].x + animation_length, control_points[control_points.size() - 1].y));
 			}
-		}
+		}*/
 
 		int numberOfControlPoint = controlPoints.size();
 		for (int i = 0; i < numberOfControlPoint - 3; i += 3) {
@@ -68,6 +71,11 @@ void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& control_point
 				Q.y = T * M * Py;
 				evaluated_curve_points.push_back(Q);
 			}
+		}
+
+		if (!wrap_control_points) {
+			evaluated_curve_points.insert(evaluated_curve_points.begin(), Point(0, evaluated_curve_points[0].y));
+			evaluated_curve_points.push_back(Point(animation_length, evaluated_curve_points[evaluated_curve_points.size() - 1].y));
 		}
 	}
 }
