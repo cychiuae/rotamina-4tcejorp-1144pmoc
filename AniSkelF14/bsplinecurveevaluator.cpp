@@ -23,9 +23,11 @@ void BsplineCurveEvaluator::evaluateCurve(const vector<Point> &ptvCtrlPts,
 		pts.push_back(Point(ptvCtrlPts.front().x + fAniLength, ptvCtrlPts.front().y));
 		pts.push_back(Point((ptvCtrlPts.begin() + 1)->x + fAniLength, (ptvCtrlPts.begin() + 1)->y));
 	}else {
-		pts.push_back(Point(0, ptvCtrlPts[0].y));
+		pts.push_back(ptvCtrlPts.front());
+		pts.push_back(ptvCtrlPts.front());
 		pts.insert(pts.end(), ptvCtrlPts.begin(), ptvCtrlPts.end());
-		pts.push_back(Point(fAniLength, ptvCtrlPts.back().y));
+		pts.push_back(ptvCtrlPts.back());
+		pts.push_back(ptvCtrlPts.back());
 	}
 
 	for (size_t cp = 0; cp + 3 < pts.size(); ++cp)
@@ -49,7 +51,7 @@ void BsplineCurveEvaluator::evaluateCurve(const vector<Point> &ptvCtrlPts,
 		if (ptvCtrlPts.back().x > ptvEvaluatedCurvePts.back().x) {
 			ptvEvaluatedCurvePts.push_back(ptvCtrlPts.back());
 		}
-		ptvEvaluatedCurvePts.push_back(Point(0, ptvCtrlPts[0].y));
+		ptvEvaluatedCurvePts.insert(ptvEvaluatedCurvePts.begin() ,Point(0, ptvCtrlPts[0].y));
 		ptvEvaluatedCurvePts.push_back(Point(fAniLength, ptvCtrlPts.back().y));
 	}
 }
