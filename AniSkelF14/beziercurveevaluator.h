@@ -1,6 +1,8 @@
 #pragma once
 
 #include "curveevaluator.h"
+#include "mat.h"
+#include "vec.h"
 
 class BezierCurveEvaluator : public CurveEvaluator {
 public:
