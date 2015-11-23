@@ -1,7 +1,9 @@
-#pragma once
+#ifndef FORCE_H_
+#define FORCE_H_
 
-#include "particle.h"
 #include "vec.h"
+
+class Particle;
 
 class Force
 {
@@ -11,3 +13,4 @@ public:
 	virtual Vec3f getState(Particle* particle)=0;
 };
 
+#endif

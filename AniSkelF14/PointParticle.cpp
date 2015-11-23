@@ -4,7 +4,14 @@
 
 
 PointParticle::~PointParticle(){
-};
+}
+
+PointParticle::PointParticle(const PointParticle& rhs) {
+	m_fMass = rhs.m_fMass;
+	m_position = rhs.m_position;
+	m_velocity = rhs.m_velocity;
+	forces = rhs.forces;
+}
 
 void PointParticle::Draw(){
 
@@ -23,7 +30,7 @@ void PointParticle::Draw(){
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_BLEND);
-};
+}
 
 Particle* PointParticle::DeepCopy(){
 	// i don't know how to copy la
@@ -31,6 +38,15 @@ Particle* PointParticle::DeepCopy(){
 	n_p->setMass(m_fMass);
 	n_p->setPosition(Vec3f(m_position[0], m_position[1], m_position[2]));
 	n_p->setVelocity(Vec3f(m_velocity[0], m_velocity[1], m_velocity[2]));
-	n_p->setForce(Vec3f(m_force[0], m_force[1], m_force[2]));
 	return n_p;
-};
+}
+
+PointParticle& PointParticle::operator=(const PointParticle& rhs) {
+	if (this != &rhs) {
+		m_fMass = rhs.m_fMass;
+		m_position = rhs.m_position;
+		m_velocity = rhs.m_velocity;
+		forces = rhs.forces;
+	}
+	return *this;
+}

@@ -99,7 +99,7 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 			velocity += force / p->getMass() * delta_t;
 			position += velocity * delta_t;
 
-			p->setForce(force);
+			//p->setForce(force);
 			p->setVelocity(velocity);
 			p->setPosition(position);
 

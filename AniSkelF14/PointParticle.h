@@ -5,10 +5,11 @@ class PointParticle :
 {
 public:
 	PointParticle() : Particle(){};
-	PointParticle(float mass, const Vec3f &position, const Vec3f &velocity, const Vec3f & force) : Particle(mass, position, velocity, force){};
+	PointParticle(const PointParticle& rhs);
+	PointParticle(float mass, const Vec3f &position, const Vec3f &velocity) : Particle(mass, position, velocity){};
 	~PointParticle();
 	Particle* DeepCopy();
 	void Draw();
-
+	PointParticle& operator=(const PointParticle& rhs);
 };
 
