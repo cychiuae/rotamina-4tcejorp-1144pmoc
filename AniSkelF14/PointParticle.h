@@ -1,15 +1,26 @@
-#pragma once
+#ifndef POINT_PARTICLE_H_
+#define POINT_PARTICLE_H_
+
+#include <memory>
+
 #include "particle.h"
-class PointParticle :
-	public Particle
+
+class PointParticle : public Particle
 {
 public:
-	PointParticle() : Particle(){};
-	PointParticle(const PointParticle& rhs);
-	PointParticle(float mass, const Vec3f &position, const Vec3f &velocity) : Particle(mass, position, velocity){};
-	~PointParticle();
-	Particle* DeepCopy();
-	void Draw();
-	PointParticle& operator=(const PointParticle& rhs);
+	PointParticle(const Vec3f &pos, const float mass, const Vec3f &velocity)
+		: Particle(pos, mass, velocity)
+	{}
+	PointParticle(const Vec3f &pos, const float mass)
+		: Particle(pos, mass)
+	{}
+
+	std::unique_ptr<Particle> Clone() const override;
+
+	void Draw() override;
+
+protected:
+	PointParticle();
 };
 
+#endif /* POINT_PARTICLE_H_ */

@@ -64,6 +64,7 @@ public:
 
 	// Returns animating flag
 	bool Animating();
+	bool Simulating() const;
 
 private:
 	// Private for singleton

@@ -15,21 +15,18 @@
 
 #ifndef __PARTICLE_SYSTEM_H__
 #define __PARTICLE_SYSTEM_H__
-#include <vector>
-#include "vec.h"
-#include <map>
-#include "Force.h"
-#include "particle.h"
-#include <stdio.h>
-#include <stdlib.h>
 
+#include <map>
+#include <memory>
+#include <vector>
+
+#include "force.h"
+#include "particle.h"
+#include "vec.h"
 
 class ParticleSystem {
 
 public:
-
-
-
 	/** Constructor **/
 	ParticleSystem();
 
@@ -64,8 +61,9 @@ public:
 
 	// This function should clear out your data structure
 	// of baked particles (without leaking memory).
-	virtual void clearBaked();	
+	virtual void clearBaked();
 
+	virtual void pushParticle(std::unique_ptr<Particle> &&p);
 
 
 	// These accessor fxns are implemented for you
@@ -75,31 +73,27 @@ public:
 	bool isSimulate() { return simulate; }
 	bool isDirty() { return dirty; }
 	void setDirty(bool d) { dirty = d; }
-	void addParticle(Particle* p);
-	void addForce(Force* f);
 
 
-protected:
-	
+private:
+	static int getKey(const float t);
 
+	std::vector<std::unique_ptr<Particle>> m_particles;
+	std::map<int, std::vector<std::unique_ptr<Particle>>> m_baked_particles;
+	std::vector<std::unique_ptr<Force>> m_global_forces;
+
+	float m_prev_t;
 
 	/** Some baking-related state **/
 	float bake_fps;						// frame rate at which simulation was baked
-	float bake_start_time;				// time at which baking started 
-										// These 2 variables are used by the UI for
-										// updating the grey indicator 
+	float bake_start_time;				// time at which baking started
+	// These 2 variables are used by the UI for
+	// updating the grey indicator
 	float bake_end_time;				// time at which baking ended
-	float m_t0;
 
 	/** General state variables **/
 	bool simulate;						// flag for simulation mode
 	bool dirty;							// flag for updating ui (don't worry about this)
-
-	std::vector<Particle*> m_particles;
-	std::map<int, std::vector<Particle*>> m_baked_particles;
-	std::vector<Force*> m_forces;
-
 };
-
 
 #endif	// __PARTICLE_SYSTEM_H__

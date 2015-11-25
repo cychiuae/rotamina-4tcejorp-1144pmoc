@@ -211,3 +211,7 @@ void ModelerApplication::RedrawLoop(void*)
 	// 1/50 second update is good enough
 	Fl::add_timeout(0.025, ModelerApplication::RedrawLoop, NULL);
 }
+
+bool ModelerApplication::Simulating() const {
+	return m_ui->simulate();
+}

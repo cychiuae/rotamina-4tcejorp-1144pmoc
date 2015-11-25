@@ -1,52 +1,38 @@
-#include "PointParticle.h"
+#include <memory>
+
+#ifdef WIN32
+#include <windows.h>
+#endif
+
+#include <FL/Fl.H>
+#include <GL/gl.h>
+
 #include "modelerdraw.h"
-#include "vec.h"
+#include "PointParticle.h"
 
+using namespace std;
 
-PointParticle::~PointParticle(){
+PointParticle::PointParticle()
+{}
+
+unique_ptr<Particle> PointParticle::Clone() const
+{
+	unique_ptr<PointParticle> p(new PointParticle);
+	*p = *this;
+	return std::move(p);
 }
 
-PointParticle::PointParticle(const PointParticle& rhs) {
-	m_fMass = rhs.m_fMass;
-	m_position = rhs.m_position;
-	m_velocity = rhs.m_velocity;
-	forces = rhs.forces;
-}
-
-void PointParticle::Draw(){
-
+void PointParticle::Draw()
+{
 	glDisable(GL_LIGHTING);
 	glDisable(GL_BLEND);
-
 	glPushMatrix();
-	glPointSize(1.0f);
-
+	glPointSize(3.0f);
 	glBegin(GL_POINTS);
 	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(getPosition()[0], getPosition()[1], getPosition()[2]);
+	glVertex3f(GetPos()[0], GetPos()[1], GetPos()[2]);
 	glEnd();
-
 	glPopMatrix();
-
 	glEnable(GL_LIGHTING);
 	glEnable(GL_BLEND);
-}
-
-Particle* PointParticle::DeepCopy(){
-	// i don't know how to copy la
-	Particle* n_p = new PointParticle();
-	n_p->setMass(m_fMass);
-	n_p->setPosition(Vec3f(m_position[0], m_position[1], m_position[2]));
-	n_p->setVelocity(Vec3f(m_velocity[0], m_velocity[1], m_velocity[2]));
-	return n_p;
-}
-
-PointParticle& PointParticle::operator=(const PointParticle& rhs) {
-	if (this != &rhs) {
-		m_fMass = rhs.m_fMass;
-		m_position = rhs.m_position;
-		m_velocity = rhs.m_velocity;
-		forces = rhs.forces;
-	}
-	return *this;
 }
