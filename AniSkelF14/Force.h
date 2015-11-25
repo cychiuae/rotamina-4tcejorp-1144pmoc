@@ -10,7 +10,7 @@ class Force
 public:
 	Force();
 	~Force();
-	virtual Vec3f getState(Particle* particle)=0;
+	virtual Vec3f getForce()=0;
 };
 
 #endif

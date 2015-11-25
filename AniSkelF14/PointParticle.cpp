@@ -4,6 +4,7 @@
 
 
 PointParticle::~PointParticle(){
+	
 }
 
 PointParticle::PointParticle(const PointParticle& rhs) {

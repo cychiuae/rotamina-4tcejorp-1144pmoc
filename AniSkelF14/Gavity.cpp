@@ -13,7 +13,7 @@ void Gavity::setConstant(float const_g){
 	G = const_g;
 }
 
-Vec3f Gavity::getState(Particle* p)
+Vec3f Gavity::getForce()
 {
 	return Vec3f(0.0f, -G, 0.0f);
 }

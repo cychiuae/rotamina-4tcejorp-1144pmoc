@@ -10,6 +10,6 @@ public:
 	Gavity(float const_g);
 	~Gavity();
 	void setConstant(float const_g);
-	Vec3f getState(Particle* p);
+	Vec3f getForce();
 };
 

@@ -21,6 +21,7 @@ public:
 	void setPosition(Vec3f position){ m_position = position; }
 	void setVelocity(Vec3f velocity){ m_velocity = velocity; }
 	void addForce(Force* f) { forces.push_back(f); }
+	void computeForcesAndUpdateParticle(std::vector<Force *> forces, float delta_t);
 protected:
 	float m_fMass;
 	Vec3f m_position;

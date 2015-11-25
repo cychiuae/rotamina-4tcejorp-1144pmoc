@@ -1,5 +1,8 @@
-#pragma once
+#ifndef POINT_PARTICLE_H
+#define POINT_PARTICLE_H
+
 #include "particle.h"
+
 class PointParticle :
 	public Particle
 {
@@ -13,3 +16,4 @@ public:
 	PointParticle& operator=(const PointParticle& rhs);
 };
 
+#endif

@@ -91,11 +91,11 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 			const float delta_t = t - m_t0;
 			for (auto &p : m_particles) {
 
-				Vec3f force = Vec3f(0.0f, 0.0f, 0.0f);
+				/*Vec3f force = Vec3f(0.0f, 0.0f, 0.0f);
 				Vec3f velocity = p->getVelocity();
 				Vec3f position = p->getPosition();
 				for(auto &f : m_forces)
-					force += f->getState(p)*p->getMass();
+					force += f->getForce()*p->getMass();
 
 				velocity += force / p->getMass() * delta_t;
 				position += velocity * delta_t;
@@ -103,12 +103,12 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 				// printf("velocity: %f,%f,%f \n",velocity[0],velocity[1force],velocity[2]);
 				// printf("position: %f,%f,%f \n",position[0],position[1],position[2]);
 				p->setVelocity(velocity);
-				p->setPosition(position);
+				p->setPosition(position);*/
+				p->computeForcesAndUpdateParticle(m_forces, delta_t);
 
 			}
 			m_t0 = t;
 			bakeParticles(t);
-
 	}
 }
 
