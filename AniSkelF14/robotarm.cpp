@@ -14,6 +14,7 @@
 #include "mat.h"
 #include "vec.h"
 #include "Gavity.h"
+#include "Wind.h"
 #include <FL/gl.h>
 #include <stdlib.h>
 
@@ -748,6 +749,11 @@ int main()
 	ModelerApplication::Instance()->SetParticleSystem(ps);
 	Force* g = new Gavity(9.8f);
 	ps->addForce(g);
+	Wind *wind = new Wind();
+	wind->setDirection(Vec3f(-0.4, 0, 0.2));
+	wind->setMagnitube(6.0);
+	ps->addForce(wind);
+	
     ModelerApplication::Instance()->Init(&createRobotArm, controls, NUMCONTROLS);
 
     ModelerApplication::Instance()->Init(&createRobotArm, controls, NUMCONTROLS);
