@@ -59,10 +59,12 @@ void AddParticleStartingAt( Vec4<float> WorldPoint ) {
 		float xVelocity = rand() % 10 / 10.0 + 2;
 		float yVelocity = cos(theta) * mag;
 		float zVelocity = sin(theta) * mag;
-
+		// printf("add: %f, %f, %f\n", WorldPoint[0], WorldPoint[1], WorldPoint[2]);
 		Vec3f position(WorldPoint[0], WorldPoint[1], WorldPoint[2]);
-		Vec3f velocity(xVelocity, yVelocity, zVelocity);
+		Vec3f velocity(-xVelocity, yVelocity, zVelocity);
 		Particle* p = new PointParticle(1.0f, position, velocity);
+		// printf("added: %f, %f, %f\n", p->getPosition()[0], p->getPosition()[1], p->getPosition()[2]);
+
 		ps->addParticle(p);
 	}
 }
@@ -134,7 +136,7 @@ void RobotArm::draw()
 
 
 	static GLfloat lmodel_ambient[] = {0.4,0.4,0.4,1.0};
-
+	
 	// define the model
 
 

@@ -1,9 +1,7 @@
 #include "Gavity.h"
-
-
-Gavity::Gavity(float G)
+Gavity::Gavity(float const_g)
 {
-
+	G = const_g;
 }
 
 

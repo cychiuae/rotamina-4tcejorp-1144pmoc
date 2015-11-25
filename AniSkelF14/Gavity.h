@@ -1,6 +1,7 @@
 #pragma once
 #include "Force.h"
 #include "vec.h"
+
 class Gavity : public Force
 {
 private:
