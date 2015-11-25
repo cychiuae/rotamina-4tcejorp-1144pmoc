@@ -199,7 +199,6 @@ void RobotArm::draw()
 			glPopMatrix();				
 			}
 
-
 			glPushMatrix(); 
 				setDiffuseColor(COLOR_YELLOW);
 				glTranslated(-0.3, 0, 1.5);
@@ -759,8 +758,6 @@ int main()
 	wind->setMagnitube(6.0);
 	ps->addForce(wind);
 	
-    ModelerApplication::Instance()->Init(&createRobotArm, controls, NUMCONTROLS);
-
     ModelerApplication::Instance()->Init(&createRobotArm, controls, NUMCONTROLS);
 
     return ModelerApplication::Instance()->Run();
