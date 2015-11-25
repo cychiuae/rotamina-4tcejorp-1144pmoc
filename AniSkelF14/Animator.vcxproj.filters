@@ -120,6 +120,9 @@
     <ClCompile Include="Gavity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="curve.h">
@@ -201,6 +204,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Gavity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
