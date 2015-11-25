@@ -8,9 +8,12 @@
 #include "modelerapp.h"
 #include "modelerdraw.h"
 #include "particleSystem.h"
-
+#include "PointParticle.h"
 
 #include <FL/gl.h>
+#include "mat.h"
+#include "vec.h"
+#include "Gavity.h"
 #include <stdlib.h>
 
 #define M_DEFAULT 2.0f
@@ -19,6 +22,50 @@
 #define MAX_VEL 200
 #define MIN_STEP 0.1
 
+static Mat4f CameraMatrix;
+Mat4f getModelViewMatrix();
+void SpawnParticles( Mat4f CameraTransforms );
+void AddParticleStartingAt(Vec4<float> WorldPoint);
+
+Mat4f getModelViewMatrix(){
+    GLfloat m[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, m);
+    Mat4f matMV(m[0], m[1], m[2], m[3],
+        m[4], m[5], m[6], m[7],
+        m[8], m[9], m[10], m[11],
+        m[12], m[13], m[14], m[15] );
+
+    return matMV.transpose(); // convert to row major
+}
+
+
+void SpawnParticles( Mat4f CameraTransforms )
+{
+
+	Mat4f ModelTransforms = CameraTransforms.inverse() * getModelViewMatrix();
+	Vec4<float> WorldPoint = ModelTransforms * Vec4f(0, 0, 0, 1);
+	AddParticleStartingAt( WorldPoint );
+	return;
+
+}
+
+
+void AddParticleStartingAt( Vec4<float> WorldPoint ) {
+	ParticleSystem* ps = ModelerApplication::Instance()->GetParticleSystem();
+	for (int i = 0; i < 100; i++) {
+	
+		float mag = rand() % 10 / 10.0 + 0.2;
+		float theta = rand() % 360 / 57.3;
+		float xVelocity = rand() % 10 / 10.0 + 2;
+		float yVelocity = cos(theta) * mag;
+		float zVelocity = sin(theta) * mag;
+
+		Vec3f position(WorldPoint[0], WorldPoint[1], WorldPoint[2]);
+		Vec3f velocity(xVelocity, yVelocity, zVelocity);
+		Particle* p = new PointParticle(1.0f, position, velocity);
+		ps->addParticle(p);
+	}
+}
 
 
 
@@ -82,10 +129,15 @@ void RobotArm::draw()
     // This call takes care of a lot of the nasty projection 
     // matrix stuff
     ModelerView::draw();
+    CameraMatrix = getModelViewMatrix();
+
+
 
 	static GLfloat lmodel_ambient[] = {0.4,0.4,0.4,1.0};
 
 	// define the model
+
+
 
 	ground(-0.2);
 
@@ -107,7 +159,7 @@ void RobotArm::draw()
 	glTranslatef( 0.0, h3, 0.0 );
 	glRotatef( cr, 0.0, 0.0, 1.0 );
 	claw(1.0);
-
+	SpawnParticles( CameraMatrix );
 	//*** DON'T FORGET TO PUT THIS IN YOUR OWN CODE **/
 	endDraw();
 }
@@ -278,13 +330,16 @@ int main()
     controls[LOWER_LENGTH] = ModelerControl("lower arm length (h2)", 1, 10.0, 0.1, 3.0 );
     controls[UPPER_LENGTH] = ModelerControl("upper arm length (h3)", 1, 10.0, 0.1, 2.5 );
     controls[PARTICLE_COUNT] = ModelerControl("particle count (pc)", 0.0, 5.0, 0.1, 5.0 );
-    
 
 
 	// You should create a ParticleSystem object ps here and then
 	// call ModelerApplication::Instance()->SetParticleSystem(ps)
 	// to hook it up to the animator interface.
 
+	ParticleSystem *ps = new ParticleSystem();
+	ModelerApplication::Instance()->SetParticleSystem(ps);
+	Force* g = new Gavity(9.8f);
+	ps->addForce(g);
     ModelerApplication::Instance()->Init(&createRobotArm, controls, NUMCONTROLS);
 
     return ModelerApplication::Instance()->Run();
