@@ -45,8 +45,8 @@ void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& control_point
 
 		if (wrap_control_points) {
 			for (unsigned int i = 0; i < 3; i++) {
-				controlPoints.push_back(Point(control_points[0].x + animation_length, control_points[0].y));
-				controlPoints.insert(controlPoints.begin(), Point(control_points[control_points.size() - 1].x - animation_length, control_points[control_points.size() - 1].y));
+				controlPoints.push_back(Point(control_points[i].x + animation_length, control_points[i].y));
+				controlPoints.insert(controlPoints.begin(), Point(control_points[control_points.size() - 1 -i].x - animation_length, control_points[control_points.size() - 1 -i].y));
 			}
 		} /*else {
 			for (int i = 0; i < 3; i++) {
