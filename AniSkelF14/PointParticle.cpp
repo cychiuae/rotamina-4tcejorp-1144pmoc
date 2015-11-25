@@ -19,13 +19,15 @@ void PointParticle::Draw(){
 	glDisable(GL_BLEND);
 
 	glPushMatrix();
-	glPointSize(10.0f);
+	setDiffuseColor(1, 1, 1);
+
+	glPointSize(1.0f);
 
 	glBegin(GL_POINTS);
 	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(getPosition()[0], getPosition()[1], getPosition()[2]);
+	glVertex3f(m_position[0], m_position[1], m_position[2]);
 	glEnd();
-	// printf("hello world");
+	// printf("draw: %f, %f, %f\n", m_position[0], m_position[1], m_position[2]);
 	glPopMatrix();
 
 	glEnable(GL_LIGHTING);

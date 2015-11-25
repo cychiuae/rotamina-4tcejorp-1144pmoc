@@ -88,24 +88,27 @@ void ParticleSystem::resetSimulation(float t)
 void ParticleSystem::computeForcesAndUpdateParticles(float t)
 {
 	if(simulate){
+			const float delta_t = t - m_t0;
+			for (auto &p : m_particles) {
 
-		const float delta_t = t - m_t0;
-		for (auto &p : m_particles) {
+				Vec3f force = Vec3f(0.0f, 0.0f, 0.0f);
+				Vec3f velocity = p->getVelocity();
+				Vec3f position = p->getPosition();
+				for(auto &f : m_forces)
+					force += f->getState(p)*p->getMass();
 
-			Vec3f force, velocity, position;
-			for(auto &f : m_forces)
-				force += f->getState(p);
+				velocity += force / p->getMass() * delta_t;
+				position += velocity * delta_t;
+				// printf("force: %f,%f,%f \n",force[0],force[1],force[2]);
+				// printf("velocity: %f,%f,%f \n",velocity[0],velocity[1force],velocity[2]);
+				// printf("position: %f,%f,%f \n",position[0],position[1],position[2]);
+				p->setVelocity(velocity);
+				p->setPosition(position);
 
-			velocity += force / p->getMass() * delta_t;
-			position += velocity * delta_t;
+			}
+			m_t0 = t;
+			bakeParticles(t);
 
-			//p->setForce(force);
-			p->setVelocity(velocity);
-			p->setPosition(position);
-
-		}
-		m_t0 = t;
-		bakeParticles(t);
 	}
 }
 
@@ -113,9 +116,10 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 /** Render particles */
 void ParticleSystem::drawParticles(float t)
 {
-
-	for (auto &bp : m_baked_particles[(int)(t*100)]) {
-		bp->Draw();
+	if (simulate) {
+		for (vector<Particle*>::iterator bp = m_baked_particles[t].begin(); bp != m_baked_particles[t].end(); bp++) {
+			(*bp)->Draw();
+		}
 	}
 	
 }
@@ -129,9 +133,9 @@ void ParticleSystem::drawParticles(float t)
 void ParticleSystem::bakeParticles(float t) 
 {
 
-	m_baked_particles[(int)(t*100)].clear();
+	m_baked_particles[t].clear();
 	for (auto &p : m_particles) {
-		m_baked_particles[(int)(t * 100)].push_back(p->DeepCopy());
+		m_baked_particles[t].push_back(p->DeepCopy());
 	}
 }
 
