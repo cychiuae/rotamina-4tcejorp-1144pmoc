@@ -35,6 +35,9 @@
 #define COLOR_DARK      0.17f,0.16f,0.18f
 #define COLOR_YELLOW    1.0f, 1.0f, 0.0f
 
+// We'll be getting the instance of the application a lot; 
+// might as well have it as a macro.
+#define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
 
 static Mat4f CameraMatrix;
 Mat4f getModelViewMatrix();
@@ -64,24 +67,6 @@ void SpawnParticles( Mat4f CameraTransforms )
 }
 
 
-void AddParticleStartingAt( Vec4<float> WorldPoint ) {
-	ParticleSystem* ps = ModelerApplication::Instance()->GetParticleSystem();
-	for (int i = 0; i < 100; i++) {
-	
-		float mag = rand() % 10 / 10.0 + 0.2;
-		float theta = rand() % 360 / 57.3;
-		float yVelocity = rand() % 10 / 10.0 + 2;
-		float xVelocity = cos(theta) * mag ;
-		float zVelocity = sin(theta) * mag*3;
-		// printf("add: %f, %f, %f\n", WorldPoint[0], WorldPoint[1], WorldPoint[2]);
-		Vec3f position(WorldPoint[0], WorldPoint[1], WorldPoint[2]);
-		Vec3f velocity(xVelocity , 15, zVelocity);
-		Particle* p = new PointParticle(1.0f, position, velocity);
-		// printf("added: %f, %f, %f\n", p->getPosition()[0], p->getPosition()[1], p->getPosition()[2]);
-
-		ps->addParticle(p);
-	}
-}
 
 
 // This is a list of the controls for the RobotArm
@@ -123,8 +108,29 @@ enum RobotArmControls
     LEVEL,
     FOG,
     SHOW_WING,
+	PARTICLE_DENSITY,
     NUMCONTROLS
 };
+
+
+void AddParticleStartingAt(Vec4<float> WorldPoint) {
+	ParticleSystem* ps = ModelerApplication::Instance()->GetParticleSystem();
+	for (int i = 0; i < VAL(PARTICLE_DENSITY); i++) {
+
+		float mag = rand() % 10 / 10.0 + 0.2;
+		float theta = rand() % 360 / 57.3;
+		float yVelocity = rand() % 10 / 10.0 + 2;
+		float xVelocity = cos(theta) * mag;
+		float zVelocity = sin(theta) * mag * 3;
+		// printf("add: %f, %f, %f\n", WorldPoint[0], WorldPoint[1], WorldPoint[2]);
+		Vec3f position(WorldPoint[0], WorldPoint[1], WorldPoint[2]);
+		Vec3f velocity(xVelocity, 15, zVelocity);
+		Particle* p = new PointParticle(1.0f, position, velocity);
+		// printf("added: %f, %f, %f\n", p->getPosition()[0], p->getPosition()[1], p->getPosition()[2]);
+
+		ps->addParticle(p);
+	}
+}
 
 void ground(float h);
 void base(float h);
@@ -150,9 +156,7 @@ ModelerView* createRobotArm(int x, int y, int w, int h, char *label)
     return new RobotArm(x,y,w,h,label); 
 }
 
-// We'll be getting the instance of the application a lot; 
-// might as well have it as a macro.
-#define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
+
 
 
 
@@ -744,6 +748,7 @@ int main()
 	controls[LEVEL] = ModelerControl("LEVEL OF DETAILS", 1, 6, 1, 6);
 	controls[FOG] = ModelerControl("Fog Intensity", 0, 2, 0.5, 0);
 	controls[SHOW_WING] = ModelerControl("Show the batman wing", 0, 1, 1, 0);
+	controls[PARTICLE_DENSITY] = ModelerControl("Particle Density", 20, 500, 10, 100);
 
 	ParticleSystem *ps = new ParticleSystem();
 	ModelerApplication::Instance()->SetParticleSystem(ps);
